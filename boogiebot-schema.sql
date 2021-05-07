@@ -5,6 +5,7 @@ CREATE TABLE users (
   last_name TEXT NOT NULL,
   email TEXT NOT NULL
     CHECK (position('@' IN email) > 1),
+  profile_url TEXT NOT NULL DEFAULT 'https://supersimple.com/wp-content/uploads/peek-a-boo-800-800-200x200.jpg',
   is_admin BOOLEAN NOT NULL DEFAULT FALSE
 );
 

@@ -26,6 +26,7 @@ describe("authenticate", function () {
 			firstName: "U1F",
 			lastName: "U1L",
 			email: "u1@email.com",
+			profileUrl: "https://supersimple.com/wp-content/uploads/peek-a-boo-800-800-200x200.jpg",
 			isAdmin: false
 		});
 	});
@@ -57,6 +58,7 @@ describe("register", function () {
 		firstName: "Test",
 		lastName: "Tester",
 		email: "test@test.com",
+		profileUrl: "",
 		isAdmin: false
 	};
 
@@ -113,6 +115,8 @@ describe("findAll", function () {
 				firstName: "U1F",
 				lastName: "U1L",
 				email: "u1@email.com",
+				profileUrl:
+					"https://supersimple.com/wp-content/uploads/peek-a-boo-800-800-200x200.jpg",
 				isAdmin: false
 			},
 			{
@@ -120,6 +124,8 @@ describe("findAll", function () {
 				firstName: "U2F",
 				lastName: "U2L",
 				email: "u2@email.com",
+				profileUrl:
+					"https://supersimple.com/wp-content/uploads/peek-a-boo-800-800-200x200.jpg",
 				isAdmin: false
 			}
 		]);
@@ -136,6 +142,7 @@ describe("get", function () {
 			firstName: "U1F",
 			lastName: "U1L",
 			email: "u1@email.com",
+			profileUrl: "https://supersimple.com/wp-content/uploads/peek-a-boo-800-800-200x200.jpg",
 			isAdmin: false,
 			hosts: [ testEventIds[0] ]
 		});
@@ -165,6 +172,7 @@ describe("update", function () {
 		let event = await User.update("u1", updateData);
 		expect(event).toEqual({
 			username: "u1",
+			profileUrl: "https://supersimple.com/wp-content/uploads/peek-a-boo-800-800-200x200.jpg",
 			...updateData
 		});
 	});
@@ -178,6 +186,7 @@ describe("update", function () {
 			firstName: "U1F",
 			lastName: "U1L",
 			email: "u1@email.com",
+			profileUrl: "https://supersimple.com/wp-content/uploads/peek-a-boo-800-800-200x200.jpg",
 			isAdmin: false
 		});
 		const found = await db.query("SELECT * FROM users WHERE username = 'u1'");

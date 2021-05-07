@@ -36,6 +36,7 @@ async function commonBeforeAll () {
 		lastName: "U1L",
 		email: "user1@user.com",
 		password: "password1",
+		profileUrl: "https://supersimple.com/wp-content/uploads/peek-a-boo-800-800-200x200.jpg",
 		isAdmin: false
 	});
 	await User.register({
@@ -44,6 +45,7 @@ async function commonBeforeAll () {
 		lastName: "U2L",
 		email: "user2@user.com",
 		password: "password2",
+		profileUrl: "https://supersimple.com/wp-content/uploads/peek-a-boo-800-800-200x200.jpg",
 		isAdmin: false
 	});
 }

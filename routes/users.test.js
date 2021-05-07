@@ -33,6 +33,7 @@ describe("POST /users", function () {
 				lastName: "Last-newL",
 				password: "password-new",
 				email: "new@email.com",
+				profileUrl: "",
 				isAdmin: false
 			})
 			.set("authorization", `Bearer ${adminToken}`);
@@ -43,6 +44,7 @@ describe("POST /users", function () {
 				firstName: "First-new",
 				lastName: "Last-newL",
 				email: "new@email.com",
+				profileUrl: "",
 				isAdmin: false
 			},
 			token: expect.any(String)
@@ -58,6 +60,7 @@ describe("POST /users", function () {
 				lastName: "Last-newL",
 				password: "password-new",
 				email: "new@email.com",
+				profileUrl: "",
 				isAdmin: true
 			})
 			.set("authorization", `Bearer ${adminToken}`);
@@ -68,6 +71,7 @@ describe("POST /users", function () {
 				firstName: "First-new",
 				lastName: "Last-newL",
 				email: "new@email.com",
+				profileUrl: "",
 				isAdmin: true
 			},
 			token: expect.any(String)
@@ -83,6 +87,7 @@ describe("POST /users", function () {
 				lastName: "Last-newL",
 				password: "password-new",
 				email: "new@email.com",
+				profileUrl: "",
 				isAdmin: true
 			})
 			.set("authorization", `Bearer ${u1Token}`);
@@ -96,6 +101,7 @@ describe("POST /users", function () {
 			lastName: "Last-newL",
 			password: "password-new",
 			email: "new@email.com",
+			profileUrl: "",
 			isAdmin: true
 		});
 		expect(resp.statusCode).toEqual(401);
@@ -120,6 +126,7 @@ describe("POST /users", function () {
 				lastName: "Last-newL",
 				password: "password-new",
 				email: "not-an-email",
+				profileUrl: "",
 				isAdmin: true
 			})
 			.set("authorization", `Bearer ${adminToken}`);
@@ -139,6 +146,8 @@ describe("GET /users", function () {
 					firstName: "U1F",
 					lastName: "U1L",
 					email: "user1@user.com",
+					profileUrl:
+						"https://supersimple.com/wp-content/uploads/peek-a-boo-800-800-200x200.jpg",
 					isAdmin: false
 				},
 				{
@@ -146,6 +155,8 @@ describe("GET /users", function () {
 					firstName: "U2F",
 					lastName: "U2L",
 					email: "user2@user.com",
+					profileUrl:
+						"https://supersimple.com/wp-content/uploads/peek-a-boo-800-800-200x200.jpg",
 					isAdmin: false
 				}
 			]
@@ -176,6 +187,8 @@ describe("GET /users/:username", function () {
 				firstName: "U1F",
 				lastName: "U1L",
 				email: "user1@user.com",
+				profileUrl:
+					"https://supersimple.com/wp-content/uploads/peek-a-boo-800-800-200x200.jpg",
 				isAdmin: false,
 				hosts: []
 			}
@@ -190,6 +203,8 @@ describe("GET /users/:username", function () {
 				firstName: "U1F",
 				lastName: "U1L",
 				email: "user1@user.com",
+				profileUrl:
+					"https://supersimple.com/wp-content/uploads/peek-a-boo-800-800-200x200.jpg",
 				isAdmin: false,
 				hosts: []
 			}
@@ -225,6 +240,8 @@ describe("PATCH /users/:username", () => {
 				firstName: "New",
 				lastName: "U1L",
 				email: "user1@user.com",
+				profileUrl:
+					"https://supersimple.com/wp-content/uploads/peek-a-boo-800-800-200x200.jpg",
 				isAdmin: false
 			}
 		});
@@ -243,6 +260,8 @@ describe("PATCH /users/:username", () => {
 				firstName: "New",
 				lastName: "U1L",
 				email: "user1@user.com",
+				profileUrl:
+					"https://supersimple.com/wp-content/uploads/peek-a-boo-800-800-200x200.jpg",
 				isAdmin: false
 			}
 		});
@@ -298,6 +317,8 @@ describe("PATCH /users/:username", () => {
 				firstName: "U1F",
 				lastName: "U1L",
 				email: "user1@user.com",
+				profileUrl:
+					"https://supersimple.com/wp-content/uploads/peek-a-boo-800-800-200x200.jpg",
 				isAdmin: false
 			}
 		});
