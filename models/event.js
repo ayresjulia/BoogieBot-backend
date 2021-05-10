@@ -22,9 +22,10 @@ class Event {
                           event_time, 
                           city, 
                           state, 
-                          country)
-           VALUES ($1, $2, $3, $4, $5, $6, $7)
-           RETURNING id, title, description, event_date AS "eventDate", event_time AS "eventTime", city, state, country`,
+						  country,
+						  img_url)
+           VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+           RETURNING id, title, description, event_date AS "eventDate", event_time AS "eventTime", city, state, country, img_url AS "imgUrl"`,
 			[
 				data.title,
 				data.description,
@@ -32,7 +33,8 @@ class Event {
 				data.eventTime,
 				data.city,
 				data.state,
-				data.country
+				data.country,
+				data.imgUrl
 			]
 		);
 		let event = result.rows[0];
@@ -57,7 +59,8 @@ class Event {
 							event_time AS "eventTime", 
 							city, 
 							state, 
-							country
+							country,
+							img_url AS "imgUrl"
 				 FROM events`;
 		let whereExpressions = [];
 		let queryValues = [];
@@ -98,7 +101,8 @@ class Event {
                     event_time AS "eventTime", 
 					city, 
 					state, 
-					country
+					country,
+					img_url AS "imgUrl"
            FROM events
            WHERE id = $1`,
 			[ id ]
@@ -136,7 +140,8 @@ class Event {
                           		event_time AS "eventTime",  
                                 city, 
                                 state, 
-                                country`;
+								country,
+								img_url AS "imgUrl"`;
 		const result = await db.query(querySql, [ ...values, id ]);
 		const event = result.rows[0];
 

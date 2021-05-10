@@ -26,7 +26,9 @@ describe("create", function () {
 		eventTime: "12:00 PM",
 		city: "Chicago",
 		state: "IL",
-		country: "US"
+		country: "US",
+		imgUrl:
+			"https://images.unsplash.com/photo-1532117182044-031e7cd916ee?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
 	};
 
 	test("works", async function () {
@@ -52,7 +54,9 @@ describe("findAll", function () {
 				eventTime: "06:00 PM",
 				city: "New York",
 				state: "NY",
-				country: "US"
+				country: "US",
+				imgUrl:
+					"https://images.unsplash.com/photo-1532117182044-031e7cd916ee?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
 			},
 			{
 				id: testEventIds[1],
@@ -62,7 +66,9 @@ describe("findAll", function () {
 				eventTime: "11:00 AM",
 				city: "Austin",
 				state: "TX",
-				country: "US"
+				country: "US",
+				imgUrl:
+					"https://images.unsplash.com/photo-1532117182044-031e7cd916ee?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
 			}
 		]);
 	});
@@ -78,7 +84,9 @@ describe("findAll", function () {
 				eventTime: "06:00 PM",
 				city: "New York",
 				state: "NY",
-				country: "US"
+				country: "US",
+				imgUrl:
+					"https://images.unsplash.com/photo-1532117182044-031e7cd916ee?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
 			}
 		]);
 	});
@@ -97,7 +105,9 @@ describe("get", function () {
 			eventTime: "06:00 PM",
 			city: "New York",
 			state: "NY",
-			country: "US"
+			country: "US",
+			imgUrl:
+				"https://images.unsplash.com/photo-1532117182044-031e7cd916ee?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
 		});
 	});
 
@@ -127,6 +137,8 @@ describe("update", function () {
 			city: "New York",
 			state: "NY",
 			country: "US",
+			imgUrl:
+				"https://images.unsplash.com/photo-1532117182044-031e7cd916ee?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
 			...updateData
 		});
 	});

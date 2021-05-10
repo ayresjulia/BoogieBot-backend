@@ -33,7 +33,9 @@ describe("POST /events", function () {
 				eventTime: "11:00 AM",
 				city: "New Orleans",
 				state: "LA",
-				country: "US"
+				country: "US",
+				imgUrl:
+					"https://images.unsplash.com/photo-1532117182044-031e7cd916ee?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
 			})
 			.set("authorization", `Bearer ${adminToken}`);
 		expect(resp.statusCode).toEqual(201);
@@ -46,7 +48,9 @@ describe("POST /events", function () {
 				eventTime: "11:00 AM",
 				city: "New Orleans",
 				state: "LA",
-				country: "US"
+				country: "US",
+				imgUrl:
+					"https://images.unsplash.com/photo-1532117182044-031e7cd916ee?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
 			}
 		});
 	});
@@ -71,7 +75,9 @@ describe("POST /events", function () {
 				eventTime: "11:00 AM",
 				city: "New Orleans",
 				state: "LA",
-				country: "US"
+				country: "US",
+				imgUrl:
+					"https://images.unsplash.com/photo-1532117182044-031e7cd916ee?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
 			})
 			.set("authorization", `Bearer ${adminToken}`);
 		expect(resp.statusCode).toEqual(400);
@@ -93,7 +99,9 @@ describe("GET /events", function () {
 					eventTime: "06:00 PM",
 					city: "New York",
 					state: "NY",
-					country: "US"
+					country: "US",
+					imgUrl:
+						"https://images.unsplash.com/photo-1532117182044-031e7cd916ee?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
 				},
 				{
 					id: expect.any(Number),
@@ -103,7 +111,9 @@ describe("GET /events", function () {
 					eventTime: "11:00 AM",
 					city: "Austin",
 					state: "TX",
-					country: "US"
+					country: "US",
+					imgUrl:
+						"https://images.unsplash.com/photo-1532117182044-031e7cd916ee?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
 				}
 			]
 		});
@@ -121,7 +131,9 @@ describe("GET /events", function () {
 					eventTime: "06:00 PM",
 					city: "New York",
 					state: "NY",
-					country: "US"
+					country: "US",
+					imgUrl:
+						"https://images.unsplash.com/photo-1532117182044-031e7cd916ee?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
 				}
 			]
 		});
@@ -146,7 +158,9 @@ describe("GET /events/:id", function () {
 				eventTime: "06:00 PM",
 				city: "New York",
 				state: "NY",
-				country: "US"
+				country: "US",
+				imgUrl:
+					"https://images.unsplash.com/photo-1532117182044-031e7cd916ee?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
 			}
 		});
 	});
@@ -176,7 +190,9 @@ describe("PATCH /events/:id", function () {
 				eventTime: "06:00 PM",
 				city: "New York",
 				state: "NY",
-				country: "US"
+				country: "US",
+				imgUrl:
+					"https://images.unsplash.com/photo-1532117182044-031e7cd916ee?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
 			}
 		});
 	});

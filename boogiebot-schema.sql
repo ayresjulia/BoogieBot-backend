@@ -17,7 +17,8 @@ CREATE TABLE events (
   event_time TEXT NOT NULL,
   city TEXT NOT NULL,
   state TEXT,
-  country TEXT NOT NULL
+  country TEXT NOT NULL,
+  img_url TEXT NOT NULL DEFAULT 'https://images.unsplash.com/photo-1532117182044-031e7cd916ee?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80'
 );
 
 CREATE TABLE hosts (
