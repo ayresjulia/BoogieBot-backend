@@ -11,29 +11,6 @@ async function commonBeforeAll () {
 	await db.query("DELETE FROM users");
 	await db.query("DELETE FROM events");
 
-	testEventIds[0] = (await Event.create({
-		title: "Event1",
-		description: "EventDesc1",
-		eventDate: "2022-06-08",
-		eventTime: "06:00 PM",
-		city: "New York",
-		state: "NY",
-		country: "US",
-		imgUrl:
-			"https://images.unsplash.com/photo-1532117182044-031e7cd916ee?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
-	})).id;
-	testEventIds[1] = (await Event.create({
-		title: "Event2",
-		description: "EventDesc2",
-		eventDate: "2022-06-08",
-		eventTime: "11:00 AM",
-		city: "Austin",
-		state: "TX",
-		country: "US",
-		imgUrl:
-			"https://images.unsplash.com/photo-1532117182044-031e7cd916ee?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
-	})).id;
-
 	await User.register({
 		username: "u1",
 		firstName: "U1F",
@@ -52,6 +29,31 @@ async function commonBeforeAll () {
 		profileUrl: "https://supersimple.com/wp-content/uploads/peek-a-boo-800-800-200x200.jpg",
 		isAdmin: false
 	});
+
+	testEventIds[0] = (await Event.create({
+		title: "Event1",
+		description: "EventDesc1",
+		eventDate: "2022-06-08",
+		eventTime: "06:00 PM",
+		city: "New York",
+		state: "NY",
+		country: "US",
+		imgUrl:
+			"https://images.unsplash.com/photo-1532117182044-031e7cd916ee?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+		hostUsername: "u1"
+	})).id;
+	testEventIds[1] = (await Event.create({
+		title: "Event2",
+		description: "EventDesc2",
+		eventDate: "2022-06-08",
+		eventTime: "11:00 AM",
+		city: "Austin",
+		state: "TX",
+		country: "US",
+		imgUrl:
+			"https://images.unsplash.com/photo-1532117182044-031e7cd916ee?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+		hostUsername: "u2"
+	})).id;
 }
 
 async function commonBeforeEach () {
@@ -67,7 +69,6 @@ async function commonAfterAll () {
 }
 
 const u1Token = createToken({ username: "u1", isAdmin: false });
-const u2Token = createToken({ username: "u2", isAdmin: false });
 const adminToken = createToken({ username: "admin", isAdmin: true });
 
 module.exports = {
@@ -77,6 +78,5 @@ module.exports = {
 	commonAfterAll,
 	testEventIds,
 	u1Token,
-	u2Token,
 	adminToken
 };

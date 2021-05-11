@@ -363,26 +363,3 @@ describe("DELETE /users/:username", function () {
 		expect(resp.statusCode).toEqual(404);
 	});
 });
-
-/************************************** POST /users/:username/events/:id */
-
-describe("POST /users/:username/events/:id", function () {
-	test("works for admin", async function () {
-		const resp = await request(app)
-			.post(`/users/u1/events/${testEventIds[1]}`)
-			.set("authorization", `Bearer ${adminToken}`);
-		expect(resp.body).toEqual({ claimed: expect.any(Number) });
-	});
-
-	test("unauth for anon", async function () {
-		const resp = await request(app).post(`/users/u1/events/${testEventIds[1]}`);
-		expect(resp.statusCode).toEqual(401);
-	});
-
-	test("not found for no such username", async function () {
-		const resp = await request(app)
-			.post(`/users/nope/events/${testEventIds[1]}`)
-			.set("authorization", `Bearer ${adminToken}`);
-		expect(resp.statusCode).toEqual(404);
-	});
-});

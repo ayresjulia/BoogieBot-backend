@@ -3,27 +3,24 @@
 /** Routes for events. */
 
 const jsonschema = require("jsonschema");
-
 const express = require("express");
 const { BadRequestError } = require("../expressError");
 const { ensureCorrectUserOrAdmin } = require("../middleware/auth");
 const Event = require("../models/event");
 const eventNewSchema = require("../schemas/eventNew.json");
 const eventUpdateSchema = require("../schemas/eventUpdate.json");
-const eventSearchSchema = require("../schemas/eventSearch.json");
-
 const router = express.Router({ mergeParams: true });
 
-/** POST / { event } => { event }
+/** POST /events/new - new event
  *
- * event should be { title, description, date, time, city, state, country, username }
+ * event should be { title, description, event_date, event_time, city, state, country, img_url, host_username}
  *
- * Returns { id, description, date, time, city, state, country, username }
+ * Returns {id, title, description, event_date, event_time, city, state, country, img_url, host_username}
  *
  * Authorization required: correct user or admin
  */
 
-router.post("/", ensureCorrectUserOrAdmin, async function (req, res, next) {
+router.post("/new", ensureCorrectUserOrAdmin, async function (req, res, next) {
 	try {
 		const validator = jsonschema.validate(req.body, eventNewSchema);
 		if (!validator.valid) {
@@ -39,46 +36,24 @@ router.post("/", ensureCorrectUserOrAdmin, async function (req, res, next) {
 });
 
 /** GET / =>
- *   { events: [ { id, title, description, date, time, city, state, country, username }, ...] }
- *
- * Can provide search filter in query:
- * - title (will find case-insensitive, partial matches)
- * - username (will find case-insensitive, partial matches)
+ *   { events: [ {id, title, description, event_date, event_time, city, state, country, img_url, host_username}, ...] }
 
  * Authorization required: none
  */
 
 router.get("/", async function (req, res, next) {
-	const q = req.query;
-
 	try {
-		const validator = jsonschema.validate(q, eventSearchSchema);
-		if (!validator.valid) {
-			const errs = validator.errors.map((e) => e.stack);
-			throw new BadRequestError(errs);
-		}
-
-		const events = await Event.findAll(q);
+		const events = await Event.findAll();
 		return res.json({ events });
 	} catch (err) {
 		return next(err);
 	}
 });
 
-/** GET /[eventId] => { event }
+/** GET /events/id => { event + host }
  *
- * Returns { id, title,
-              description,
-              date, 
-              time, 
-              city, 
-              state, 
-              country, 
-              username }
- *   where username is { username,
-                  first_name,
-                  last_name,
-                  email }
+ * Returns {id, title, description, event_date, event_time, city, state, country, img_url, host}
+ *   where host is { username, first_name, last_name, email }
  *
  * Authorization required: none
  */
@@ -92,11 +67,11 @@ router.get("/:id", async function (req, res, next) {
 	}
 });
 
-/** PATCH /[eventId]  { fld1, fld2, ... } => { event }
+/** PATCH /events/id
  *
- * Data can include: { title, description, date, time, city, state, country }
+ * Data can include: { title, description, event_date, event_time, city, state, country, img_url }
  *
- * Returns { id, description, date, time, city, state, country, username }
+ * Returns {id, title, description, event_date, event_time, city, state, country, img_url, host_username}
  *
  * Authorization required: correct user or admin
  */
@@ -104,6 +79,7 @@ router.get("/:id", async function (req, res, next) {
 router.patch("/:id", ensureCorrectUserOrAdmin, async function (req, res, next) {
 	try {
 		const validator = jsonschema.validate(req.body, eventUpdateSchema);
+
 		if (!validator.valid) {
 			const errs = validator.errors.map((e) => e.stack);
 			throw new BadRequestError(errs);
@@ -116,7 +92,7 @@ router.patch("/:id", ensureCorrectUserOrAdmin, async function (req, res, next) {
 	}
 });
 
-/** DELETE /[id]  =>  { deleted: id }
+/** DELETE /events/id  =>  { deleted: id }
  *
  * Authorization required: correct user or admin
  */

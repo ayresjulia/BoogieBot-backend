@@ -37,6 +37,9 @@
 		},
 		"imgUrl": {
 			"type": "string"
+		},
+		"hostUsername": {
+			"type": "string"
 		}
 	},
 	"additionalProperties": false,

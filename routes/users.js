@@ -59,8 +59,7 @@ router.get("/", ensureAdmin, async function (req, res, next) {
 
 /** GET /[username] => { user }
  *
- * Returns { username, firstName, lastName, isAdmin, events }
- *   where events is { id, title, description, date, time, city, state, country, username }
+ * Returns { username, firstName, lastName, isAdmin }
  *
  * Authorization required: admin or same user-as-:username
  **/
@@ -108,23 +107,6 @@ router.delete("/:username", ensureCorrectUserOrAdmin, async function (req, res, 
 	try {
 		await User.remove(req.params.username);
 		return res.json({ deleted: req.params.username });
-	} catch (err) {
-		return next(err);
-	}
-});
-
-/** POST /[username]/events/[id]
- *
- * Returns {"claimed": eventId}
- *
- * Authorization required: admin or same-user-as-:username
- * */
-
-router.post("/:username/events/:id", ensureCorrectUserOrAdmin, async function (req, res, next) {
-	try {
-		const eventId = +req.params.id;
-		await User.claimEventAsHost(req.params.username, eventId);
-		return res.json({ claimed: eventId });
 	} catch (err) {
 		return next(err);
 	}

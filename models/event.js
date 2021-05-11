@@ -9,9 +9,9 @@ const { sqlForPartialUpdate } = require("../helpers/sql");
 class Event {
 	/** Create an Event (from data), update db, return new event data.
    *
-   * data should be { title, description, date, time, city, state, country, username}
+   * data should be { title, description, event_date, event_time, city, state, country, img_url, host_username}
    *
-   * Returns { id, title, description, date, time, city, state, country, username}
+   * Returns { id, title, description, event_date, event_time, city, state, country, img_url, host_username}
    **/
 
 	static async create (data) {
@@ -23,9 +23,10 @@ class Event {
                           city, 
                           state, 
 						  country,
-						  img_url)
-           VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
-           RETURNING id, title, description, event_date AS "eventDate", event_time AS "eventTime", city, state, country, img_url AS "imgUrl"`,
+						  img_url,
+						  host_username)
+           VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+           RETURNING id, title, description, event_date AS "eventDate", event_time AS "eventTime", city, state, country, img_url AS "imgUrl", host_username AS "hostUsername"`,
 			[
 				data.title,
 				data.description,
@@ -34,7 +35,8 @@ class Event {
 				data.city,
 				data.state,
 				data.country,
-				data.imgUrl
+				data.imgUrl,
+				data.hostUsername
 			]
 		);
 		let event = result.rows[0];
@@ -42,17 +44,13 @@ class Event {
 		return event;
 	}
 
-	/** Find all events (optional filter on searchFilters).
+	/** Find all events.
    *
-   * searchFilters (all optional):
-   * - title (will find case-insensitive, partial matches)
-   * - username (will find case-insensitive, partial matches)
-   *
-   * Returns [{ id, title, description, username }, ...]
-   * */
+   * Returns {id, title, description, event_date, event_time, city, state, country, img_url, host_username}
+   **/
 
-	static async findAll ({ title } = {}) {
-		let query = `SELECT id,
+	static async findAll () {
+		const result = await db.query(`SELECT id,
 							title,
 							description,
 							event_date AS "eventDate", 
@@ -60,34 +58,18 @@ class Event {
 							city, 
 							state, 
 							country,
-							img_url AS "imgUrl"
-				 FROM events`;
-		let whereExpressions = [];
-		let queryValues = [];
+							img_url AS "imgUrl",
+							host_username AS "hostUsername"
+				 FROM events
+				 ORDER BY id`);
 
-		// For each possible search term, add to whereExpressions and
-		// queryValues so we can generate the right SQL
-
-		if (title !== undefined) {
-			queryValues.push(`%${title}%`);
-			whereExpressions.push(`title ILIKE $${queryValues.length}`);
-		}
-
-		if (whereExpressions.length > 0) {
-			query += " WHERE " + whereExpressions.join(" AND ");
-		}
-
-		// Finalize query and return results
-
-		query += " ORDER BY title";
-		const eventsRes = await db.query(query, queryValues);
-		return eventsRes.rows;
+		return result.rows;
 	}
 
 	/** Given a event id, return data about event.
    *
-   * Returns { id, title, description, date, time, city, state, country, username }
-   *   where user is { username, frist_name, last_name, email }
+   * Returns {id, title, description, event_date, event_time, city, state, country, img_url, host_username}
+   *   where host is { username, first_name, last_name, email }
    *
    * Throws NotFoundError if not found.
    **/
@@ -102,7 +84,8 @@ class Event {
 					city, 
 					state, 
 					country,
-					img_url AS "imgUrl"
+					img_url AS "imgUrl",
+					host_username AS "hostUsername"
            FROM events
            WHERE id = $1`,
 			[ id ]
@@ -112,16 +95,29 @@ class Event {
 
 		if (!event) throw new NotFoundError(`No event found with ID: ${id}`);
 
+		const hostRes = await db.query(
+			`SELECT username,
+					first_name AS "firstName",
+					last_name AS "lastName",
+					email
+			 FROM users
+			 WHERE username = $1`,
+			[ event.hostUsername ]
+		);
+
+		delete event.hostUsername;
+		event.host = hostRes.rows[0];
+
 		return event;
 	}
 
 	/** Update event data with `data`.
    *
-   * This is a "partial update" --- it's fine if data doesn't contain all the fields; this only changes provided ones.
+   * This is a "partial update" - data might not contain all the fields; this only changes provided ones.
    *
-   * Data can include: { title, description, date, time, city, state, country }
+   * Data can include: { title, description, event_date, event_time, city, state, country, img_url }
    *
-   * Returns { id, title, description, date, time, city, state, country, username }
+   * Returns {id, title, description, event_date, event_time, city, state, country, img_url, host_username}
    *
    * Throws NotFoundError if not found.
    */
@@ -141,7 +137,8 @@ class Event {
                                 city, 
                                 state, 
 								country,
-								img_url AS "imgUrl"`;
+								img_url AS "imgUrl",
+								host_username AS "hostUsername"`;
 		const result = await db.query(querySql, [ ...values, id ]);
 		const event = result.rows[0];
 

@@ -28,7 +28,8 @@ describe("create", function () {
 		state: "IL",
 		country: "US",
 		imgUrl:
-			"https://images.unsplash.com/photo-1532117182044-031e7cd916ee?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
+			"https://images.unsplash.com/photo-1532117182044-031e7cd916ee?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+		hostUsername: "u1"
 	};
 
 	test("works", async function () {
@@ -43,7 +44,7 @@ describe("create", function () {
 /************************************** findAll */
 
 describe("findAll", function () {
-	test("works: no filter", async function () {
+	test("works", async function () {
 		let events = await Event.findAll();
 		expect(events).toEqual([
 			{
@@ -56,7 +57,8 @@ describe("findAll", function () {
 				state: "NY",
 				country: "US",
 				imgUrl:
-					"https://images.unsplash.com/photo-1532117182044-031e7cd916ee?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
+					"https://images.unsplash.com/photo-1532117182044-031e7cd916ee?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+				hostUsername: "u1"
 			},
 			{
 				id: testEventIds[1],
@@ -68,25 +70,8 @@ describe("findAll", function () {
 				state: "TX",
 				country: "US",
 				imgUrl:
-					"https://images.unsplash.com/photo-1532117182044-031e7cd916ee?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
-			}
-		]);
-	});
-
-	test("works: by title", async function () {
-		let events = await Event.findAll({ title: "Event1" });
-		expect(events).toEqual([
-			{
-				id: testEventIds[0],
-				title: "Event1",
-				description: "EventDesc1",
-				eventDate: "2022-06-07",
-				eventTime: "06:00 PM",
-				city: "New York",
-				state: "NY",
-				country: "US",
-				imgUrl:
-					"https://images.unsplash.com/photo-1532117182044-031e7cd916ee?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
+					"https://images.unsplash.com/photo-1532117182044-031e7cd916ee?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+				hostUsername: "u2"
 			}
 		]);
 	});
@@ -107,7 +92,13 @@ describe("get", function () {
 			state: "NY",
 			country: "US",
 			imgUrl:
-				"https://images.unsplash.com/photo-1532117182044-031e7cd916ee?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
+				"https://images.unsplash.com/photo-1532117182044-031e7cd916ee?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+			host: {
+				username: "u1",
+				firstName: "U1F",
+				lastName: "U1L",
+				email: "u1@email.com"
+			}
 		});
 	});
 
@@ -139,6 +130,7 @@ describe("update", function () {
 			country: "US",
 			imgUrl:
 				"https://images.unsplash.com/photo-1532117182044-031e7cd916ee?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+			hostUsername: "u1",
 			...updateData
 		});
 	});

@@ -16,7 +16,7 @@ VALUES ('testuser',
         'https://cn.i.cdn.ti-platform.com/content/914/showpage/we-bare-bears/za/webarebears-200x200.png',
         TRUE);
 
-INSERT INTO events (title, description, event_date, event_time, city, state, country, img_url)
-VALUES ('Wedding Test', 'Julia and Ryan Ayres Wedding day!', '2022-06-08', '06:00 PM', 'New York', 'NY', 'US', 'https://images.unsplash.com/photo-1532117182044-031e7cd916ee?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80'),
-       ('Birthday Test', 'Come to celebrate Coco birthday with us!!','2022-06-08', '11:00 AM', 'Austin', 'TX', 'US', 'https://images.unsplash.com/photo-1532117182044-031e7cd916ee?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80')
+INSERT INTO events (title, description, event_date, event_time, city, state, country, img_url, host_username)
+VALUES ('Wedding Test', 'Julia and Ryan Ayres Wedding day!', '2022-06-08', '06:00 PM', 'New York', 'NY', 'US', 'https://images.unsplash.com/photo-1532117182044-031e7cd916ee?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80', 'testuser'),
+       ('Birthday Test', 'Come to celebrate Coco birthday with us!!','2022-06-08', '11:00 AM', 'Austin', 'TX', 'US', 'https://images.unsplash.com/photo-1532117182044-031e7cd916ee?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80', 'testadmin')
 

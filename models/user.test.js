@@ -234,37 +234,3 @@ describe("remove", function () {
 		}
 	});
 });
-
-/************************************** claimEventAsHost */
-
-describe("claimEventAsHost", function () {
-	test("works", async function () {
-		await User.claimEventAsHost("u1", testEventIds[1]);
-
-		const res = await db.query("SELECT * FROM hosts WHERE event_id=$1", [ testEventIds[1] ]);
-		expect(res.rows).toEqual([
-			{
-				event_id: testEventIds[1],
-				username: "u1"
-			}
-		]);
-	});
-
-	test("not found if no such event", async function () {
-		try {
-			await User.claimEventAsHost("u1", 0, "claimed");
-			fail();
-		} catch (err) {
-			expect(err instanceof NotFoundError).toBeTruthy();
-		}
-	});
-
-	test("not found if no such user", async function () {
-		try {
-			await User.claimEventAsHost("bad user", testEventIds[0], "claimed");
-			fail();
-		} catch (err) {
-			expect(err instanceof NotFoundError).toBeTruthy();
-		}
-	});
-});

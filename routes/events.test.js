@@ -1,9 +1,7 @@
 "use strict";
 
 const request = require("supertest");
-
 const app = require("../app");
-
 const {
 	commonBeforeAll,
 	commonBeforeEach,
@@ -11,7 +9,6 @@ const {
 	commonAfterAll,
 	testEventIds,
 	u1Token,
-	u2Token,
 	adminToken
 } = require("./_testCommon");
 
@@ -22,10 +19,10 @@ afterAll(commonAfterAll);
 
 /************************************** POST /events */
 
-describe("POST /events", function () {
+describe("POST /events/new", function () {
 	test("ok for admin", async function () {
 		const resp = await request(app)
-			.post(`/events`)
+			.post(`/events/new`)
 			.send({
 				title: "New",
 				description: "New",
@@ -35,7 +32,8 @@ describe("POST /events", function () {
 				state: "LA",
 				country: "US",
 				imgUrl:
-					"https://images.unsplash.com/photo-1532117182044-031e7cd916ee?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
+					"https://images.unsplash.com/photo-1532117182044-031e7cd916ee?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+				hostUsername: "u1"
 			})
 			.set("authorization", `Bearer ${adminToken}`);
 		expect(resp.statusCode).toEqual(201);
@@ -50,14 +48,15 @@ describe("POST /events", function () {
 				state: "LA",
 				country: "US",
 				imgUrl:
-					"https://images.unsplash.com/photo-1532117182044-031e7cd916ee?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
+					"https://images.unsplash.com/photo-1532117182044-031e7cd916ee?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+				hostUsername: "u1"
 			}
 		});
 	});
 
 	test("bad request with missing data", async function () {
 		const resp = await request(app)
-			.post(`/events`)
+			.post(`/events/new`)
 			.send({
 				title: "nope"
 			})
@@ -67,7 +66,7 @@ describe("POST /events", function () {
 
 	test("bad request with invalid data", async function () {
 		const resp = await request(app)
-			.post(`/events`)
+			.post(`/events/new`)
 			.send({
 				title: 123,
 				description: "New",
@@ -77,7 +76,8 @@ describe("POST /events", function () {
 				state: "LA",
 				country: "US",
 				imgUrl:
-					"https://images.unsplash.com/photo-1532117182044-031e7cd916ee?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
+					"https://images.unsplash.com/photo-1532117182044-031e7cd916ee?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+				hostUsername: "u1"
 			})
 			.set("authorization", `Bearer ${adminToken}`);
 		expect(resp.statusCode).toEqual(400);
@@ -101,7 +101,8 @@ describe("GET /events", function () {
 					state: "NY",
 					country: "US",
 					imgUrl:
-						"https://images.unsplash.com/photo-1532117182044-031e7cd916ee?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
+						"https://images.unsplash.com/photo-1532117182044-031e7cd916ee?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+					hostUsername: "u1"
 				},
 				{
 					id: expect.any(Number),
@@ -113,34 +114,11 @@ describe("GET /events", function () {
 					state: "TX",
 					country: "US",
 					imgUrl:
-						"https://images.unsplash.com/photo-1532117182044-031e7cd916ee?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
+						"https://images.unsplash.com/photo-1532117182044-031e7cd916ee?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+					hostUsername: "u2"
 				}
 			]
 		});
-	});
-
-	test("works: filtering", async function () {
-		const resp = await request(app).get(`/events`).query({ title: "Event1" });
-		expect(resp.body).toEqual({
-			events: [
-				{
-					id: expect.any(Number),
-					title: "Event1",
-					description: "EventDesc1",
-					eventDate: "2022-06-08",
-					eventTime: "06:00 PM",
-					city: "New York",
-					state: "NY",
-					country: "US",
-					imgUrl:
-						"https://images.unsplash.com/photo-1532117182044-031e7cd916ee?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
-				}
-			]
-		});
-	});
-	test("bad request on invalid filter key", async function () {
-		const resp = await request(app).get(`/events`).query({ byTitle: 78 });
-		expect(resp.statusCode).toEqual(400);
 	});
 });
 
@@ -160,7 +138,13 @@ describe("GET /events/:id", function () {
 				state: "NY",
 				country: "US",
 				imgUrl:
-					"https://images.unsplash.com/photo-1532117182044-031e7cd916ee?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
+					"https://images.unsplash.com/photo-1532117182044-031e7cd916ee?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+				host: {
+					username: "u1",
+					firstName: "U1F",
+					lastName: "U1L",
+					email: "user1@user.com"
+				}
 			}
 		});
 	});
@@ -192,7 +176,8 @@ describe("PATCH /events/:id", function () {
 				state: "NY",
 				country: "US",
 				imgUrl:
-					"https://images.unsplash.com/photo-1532117182044-031e7cd916ee?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
+					"https://images.unsplash.com/photo-1532117182044-031e7cd916ee?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+				hostUsername: "u1"
 			}
 		});
 	});

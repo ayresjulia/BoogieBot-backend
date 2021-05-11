@@ -175,6 +175,7 @@ class User {
 		const { setCols, values } = sqlForPartialUpdate(data, {
 			firstName: "first_name",
 			lastName: "last_name",
+			profileUrl: "profile_url",
 			isAdmin: "is_admin"
 		});
 		const usernameVarIdx = "$" + (values.length + 1);
@@ -210,40 +211,6 @@ class User {
 		const user = result.rows[0];
 
 		if (!user) throw new NotFoundError(`No user: ${username}`);
-	}
-
-	/** Claim event as Host: update db, returns undefined.
-   *
-   * - username: username creating an event
-   * - eventId: event id
-   **/
-
-	static async claimEventAsHost (username, eventId) {
-		const preCheck = await db.query(
-			`SELECT id
-           FROM events
-           WHERE id = $1`,
-			[ eventId ]
-		);
-		const event = preCheck.rows[0];
-
-		if (!event) throw new NotFoundError(`No event: ${eventId}`);
-
-		const preCheck2 = await db.query(
-			`SELECT username
-           FROM users
-           WHERE username = $1`,
-			[ username ]
-		);
-		const user = preCheck2.rows[0];
-
-		if (!user) throw new NotFoundError(`No username: ${username}`);
-
-		await db.query(
-			`INSERT INTO hosts (username, event_id)
-           VALUES ($1, $2)`,
-			[ username, eventId ]
-		);
 	}
 }
 

@@ -18,13 +18,14 @@ CREATE TABLE events (
   city TEXT NOT NULL,
   state TEXT,
   country TEXT NOT NULL,
-  img_url TEXT NOT NULL DEFAULT 'https://images.unsplash.com/photo-1532117182044-031e7cd916ee?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80'
+  img_url TEXT NOT NULL DEFAULT 'https://images.unsplash.com/photo-1532117182044-031e7cd916ee?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80',
+  host_username TEXT NOT NULL
+    REFERENCES users ON DELETE CASCADE
 );
 
-CREATE TABLE hosts (
-  username VARCHAR(25)
-    REFERENCES users ON DELETE CASCADE,
-  event_id INTEGER
-    REFERENCES events ON DELETE CASCADE,
-  PRIMARY KEY (username, event_id)
-);
+-- CREATE TABLE moodboard (
+--   event_id INTEGER
+--     REFERENCES events ON DELETE CASCADE,
+--   inspiration TEXT NOT NULL,
+--   catering TEXT NOT NULL
+-- );
