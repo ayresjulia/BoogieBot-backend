@@ -1,7 +1,6 @@
 "use strict";
 
 const request = require("supertest");
-
 const db = require("../db.js");
 const app = require("../app");
 const User = require("../models/user");
@@ -189,8 +188,7 @@ describe("GET /users/:username", function () {
 				email: "user1@user.com",
 				profileUrl:
 					"https://supersimple.com/wp-content/uploads/peek-a-boo-800-800-200x200.jpg",
-				isAdmin: false,
-				hosts: []
+				isAdmin: false
 			}
 		});
 	});
@@ -205,8 +203,7 @@ describe("GET /users/:username", function () {
 				email: "user1@user.com",
 				profileUrl:
 					"https://supersimple.com/wp-content/uploads/peek-a-boo-800-800-200x200.jpg",
-				isAdmin: false,
-				hosts: []
+				isAdmin: false
 			}
 		});
 	});

@@ -105,7 +105,6 @@ class Event {
 			[ event.hostUsername ]
 		);
 
-		delete event.hostUsername;
 		event.host = hostRes.rows[0];
 
 		return event;

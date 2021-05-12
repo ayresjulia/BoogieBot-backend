@@ -7,8 +7,7 @@ const {
 	commonBeforeAll,
 	commonBeforeEach,
 	commonAfterEach,
-	commonAfterAll,
-	testEventIds
+	commonAfterAll
 } = require("./_testCommon");
 
 beforeAll(commonBeforeAll);
@@ -18,8 +17,8 @@ afterAll(commonAfterAll);
 
 /************************************** authenticate */
 
-describe("authenticate", function () {
-	test("works", async function () {
+describe("authenticate user", function () {
+	test("works with username and password", async function () {
 		const user = await User.authenticate("u1", "password1");
 		expect(user).toEqual({
 			username: "u1",
@@ -31,7 +30,7 @@ describe("authenticate", function () {
 		});
 	});
 
-	test("unauth if no such user", async function () {
+	test("unauthorized if no such user", async function () {
 		try {
 			await User.authenticate("nope", "password");
 			fail();
@@ -40,7 +39,7 @@ describe("authenticate", function () {
 		}
 	});
 
-	test("unauth if wrong password", async function () {
+	test("unauthorized if wrong password", async function () {
 		try {
 			await User.authenticate("c1", "wrong");
 			fail();
@@ -52,7 +51,7 @@ describe("authenticate", function () {
 
 /************************************** register */
 
-describe("register", function () {
+describe("register new user", function () {
 	const newUser = {
 		username: "new",
 		firstName: "Test",
@@ -62,7 +61,7 @@ describe("register", function () {
 		isAdmin: false
 	};
 
-	test("works", async function () {
+	test("registers new user", async function () {
 		let user = await User.register({
 			...newUser,
 			password: "password"
@@ -74,7 +73,7 @@ describe("register", function () {
 		expect(found.rows[0].password.startsWith("$2b$")).toEqual(true);
 	});
 
-	test("works: adds admin", async function () {
+	test("registers admin", async function () {
 		let user = await User.register({
 			...newUser,
 			password: "password",
@@ -87,7 +86,7 @@ describe("register", function () {
 		expect(found.rows[0].password.startsWith("$2b$")).toEqual(true);
 	});
 
-	test("bad request with dup data", async function () {
+	test("bad request with duplicate data", async function () {
 		try {
 			await User.register({
 				...newUser,
@@ -106,8 +105,8 @@ describe("register", function () {
 
 /************************************** findAll */
 
-describe("findAll", function () {
-	test("works", async function () {
+describe("find all users", function () {
+	test("displays list of all users", async function () {
 		const users = await User.findAll();
 		expect(users).toEqual([
 			{
@@ -134,8 +133,8 @@ describe("findAll", function () {
 
 /************************************** get */
 
-describe("get", function () {
-	test("works", async function () {
+describe("get user by username", function () {
+	test("gets user by username", async function () {
 		let user = await User.get("u1");
 		expect(user).toEqual({
 			username: "u1",
@@ -143,12 +142,11 @@ describe("get", function () {
 			lastName: "U1L",
 			email: "u1@email.com",
 			profileUrl: "https://supersimple.com/wp-content/uploads/peek-a-boo-800-800-200x200.jpg",
-			isAdmin: false,
-			hosts: [ testEventIds[0] ]
+			isAdmin: false
 		});
 	});
 
-	test("not found if no such user", async function () {
+	test("not found if username doesn't exist", async function () {
 		try {
 			await User.get("nope");
 			fail();
@@ -160,7 +158,7 @@ describe("get", function () {
 
 /************************************** update */
 
-describe("update", function () {
+describe("update user with partial data", function () {
 	const updateData = {
 		firstName: "NewF",
 		lastName: "NewF",
@@ -168,7 +166,7 @@ describe("update", function () {
 		isAdmin: true
 	};
 
-	test("works", async function () {
+	test("updates user with passed data", async function () {
 		let event = await User.update("u1", updateData);
 		expect(event).toEqual({
 			username: "u1",
@@ -177,7 +175,7 @@ describe("update", function () {
 		});
 	});
 
-	test("works: set password", async function () {
+	test("works when updating password", async function () {
 		let user = await User.update("u1", {
 			password: "new"
 		});
@@ -194,7 +192,7 @@ describe("update", function () {
 		expect(found.rows[0].password.startsWith("$2b$")).toEqual(true);
 	});
 
-	test("not found if no such user", async function () {
+	test("not found error if username doesn't exist", async function () {
 		try {
 			await User.update("nope", {
 				firstName: "test"
@@ -205,7 +203,7 @@ describe("update", function () {
 		}
 	});
 
-	test("bad request if no data", async function () {
+	test("bad request error if no data passed in", async function () {
 		expect.assertions(1);
 		try {
 			await User.update("c1", {});
@@ -218,14 +216,14 @@ describe("update", function () {
 
 /************************************** remove */
 
-describe("remove", function () {
-	test("works", async function () {
+describe("remove user from database", function () {
+	test("works when username is passed in", async function () {
 		await User.remove("u1");
 		const res = await db.query("SELECT * FROM users WHERE username='u1'");
 		expect(res.rows.length).toEqual(0);
 	});
 
-	test("not found if no such user", async function () {
+	test("not found error if username doesn't exist", async function () {
 		try {
 			await User.remove("nope");
 			fail();

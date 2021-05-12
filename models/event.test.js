@@ -18,7 +18,7 @@ afterAll(commonAfterAll);
 
 /************************************** create */
 
-describe("create", function () {
+describe("create a new event", function () {
 	let newEvent = {
 		title: "Anniversary",
 		description: "Doggies 1st anni",
@@ -32,7 +32,7 @@ describe("create", function () {
 		hostUsername: "u1"
 	};
 
-	test("works", async function () {
+	test("creates new event successfully", async function () {
 		let event = await Event.create(newEvent);
 		expect(event).toEqual({
 			...newEvent,
@@ -43,8 +43,8 @@ describe("create", function () {
 
 /************************************** findAll */
 
-describe("findAll", function () {
-	test("works", async function () {
+describe("find all events in the database", function () {
+	test("finds all events in db", async function () {
 		let events = await Event.findAll();
 		expect(events).toEqual([
 			{
@@ -79,8 +79,8 @@ describe("findAll", function () {
 
 /************************************** get */
 
-describe("get", function () {
-	test("works", async function () {
+describe("gets event by id", function () {
+	test("works when getting event by id", async function () {
 		let event = await Event.get(testEventIds[0]);
 		expect(event).toEqual({
 			id: testEventIds[0],
@@ -114,12 +114,12 @@ describe("get", function () {
 
 /************************************** update */
 
-describe("update", function () {
+describe("update event partially", function () {
 	let updateData = {
 		title: "New Title",
 		description: "New Desc wow so cool"
 	};
-	test("works", async function () {
+	test("updates event with data passed", async function () {
 		let event = await Event.update(testEventIds[0], updateData);
 		expect(event).toEqual({
 			id: testEventIds[0],
@@ -146,7 +146,7 @@ describe("update", function () {
 		}
 	});
 
-	test("bad request with no data", async function () {
+	test("throws bad request error with no data", async function () {
 		try {
 			await Event.update(testEventIds[0], {});
 			fail();
@@ -158,8 +158,8 @@ describe("update", function () {
 
 /************************************** remove */
 
-describe("remove", function () {
-	test("works", async function () {
+describe("remove an event using id", function () {
+	test("works when removing event by id", async function () {
 		await Event.remove(testEventIds[0]);
 		const res = await db.query("SELECT id FROM events WHERE id=$1", [ testEventIds[0] ]);
 		expect(res.rows.length).toEqual(0);

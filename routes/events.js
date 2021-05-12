@@ -5,7 +5,7 @@
 const jsonschema = require("jsonschema");
 const express = require("express");
 const { BadRequestError } = require("../expressError");
-const { ensureCorrectUserOrAdmin } = require("../middleware/auth");
+const { ensureCorrectUserOrAdminEvent, ensureAdmin } = require("../middleware/auth");
 const Event = require("../models/event");
 const eventNewSchema = require("../schemas/eventNew.json");
 const eventUpdateSchema = require("../schemas/eventUpdate.json");
@@ -20,14 +20,13 @@ const router = express.Router({ mergeParams: true });
  * Authorization required: correct user or admin
  */
 
-router.post("/new", ensureCorrectUserOrAdmin, async function (req, res, next) {
+router.post("/new", ensureCorrectUserOrAdminEvent, async function (req, res, next) {
 	try {
 		const validator = jsonschema.validate(req.body, eventNewSchema);
 		if (!validator.valid) {
 			const errs = validator.errors.map((e) => e.stack);
 			throw new BadRequestError(errs);
 		}
-
 		const event = await Event.create(req.body);
 		return res.status(201).json({ event });
 	} catch (err) {
@@ -41,7 +40,7 @@ router.post("/new", ensureCorrectUserOrAdmin, async function (req, res, next) {
  * Authorization required: none
  */
 
-router.get("/", async function (req, res, next) {
+router.get("/", ensureAdmin, async function (req, res, next) {
 	try {
 		const events = await Event.findAll();
 		return res.json({ events });
@@ -58,7 +57,7 @@ router.get("/", async function (req, res, next) {
  * Authorization required: none
  */
 
-router.get("/:id", async function (req, res, next) {
+router.get("/:id", ensureCorrectUserOrAdminEvent, async function (req, res, next) {
 	try {
 		const event = await Event.get(req.params.id);
 		return res.json({ event });
@@ -76,10 +75,9 @@ router.get("/:id", async function (req, res, next) {
  * Authorization required: correct user or admin
  */
 
-router.patch("/:id", ensureCorrectUserOrAdmin, async function (req, res, next) {
+router.patch("/:id", ensureCorrectUserOrAdminEvent, async function (req, res, next) {
 	try {
 		const validator = jsonschema.validate(req.body, eventUpdateSchema);
-
 		if (!validator.valid) {
 			const errs = validator.errors.map((e) => e.stack);
 			throw new BadRequestError(errs);
@@ -97,7 +95,7 @@ router.patch("/:id", ensureCorrectUserOrAdmin, async function (req, res, next) {
  * Authorization required: correct user or admin
  */
 
-router.delete("/:id", ensureCorrectUserOrAdmin, async function (req, res, next) {
+router.delete("/:id", ensureCorrectUserOrAdminEvent, async function (req, res, next) {
 	try {
 		await Event.remove(req.params.id);
 		return res.json({ deleted: +req.params.id });

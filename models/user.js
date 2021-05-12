@@ -116,8 +116,7 @@ class User {
 
 	/** Given a username, return data about user.
    *
-   * Returns { username, first_name, last_name, is_admin, events }
-   *   where hosts is { id, title, description, date, time, city, state, country, username }
+   * Returns { username, first_name, last_name, is_admin }
    *
    * Throws NotFoundError if user not found.
    **/
@@ -139,14 +138,6 @@ class User {
 
 		if (!user) throw new NotFoundError(`No user: ${username}`);
 
-		const userHostsRes = await db.query(
-			`SELECT h.event_id
-           FROM hosts AS h
-           WHERE h.username = $1`,
-			[ username ]
-		);
-
-		user.hosts = userHostsRes.rows.map((e) => e.event_id);
 		return user;
 	}
 

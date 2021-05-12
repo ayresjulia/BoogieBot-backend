@@ -5,6 +5,7 @@
 const jwt = require("jsonwebtoken");
 const { SECRET_KEY } = require("../config");
 const { UnauthorizedError } = require("../expressError");
+const Event = require("../models/event");
 
 /** Middleware: Authenticate user.
  *
@@ -66,8 +67,28 @@ function ensureAdmin (req, res, next) {
 function ensureCorrectUserOrAdmin (req, res, next) {
 	try {
 		const user = res.locals.user;
-
 		if (!(user && (user.isAdmin || user.username === req.params.username))) {
+			throw new UnauthorizedError();
+		}
+		return next();
+	} catch (err) {
+		return next(err);
+	}
+}
+
+/** Middleware to use in events routes, only admin or host of the event can create or update events.
+ *
+ *  If not the correct user, raises Unauthorized.
+ */
+
+async function ensureCorrectUserOrAdminEvent (req, res, next) {
+	try {
+		const user = res.locals.user;
+		if (user === undefined) throw new UnauthorizedError();
+		const events = await Event.findAll();
+		const correctUser = events.find((e) => Object.values(e).includes(user.username));
+
+		if (!(user && (user.isAdmin || correctUser.hostUsername === user.username))) {
 			throw new UnauthorizedError();
 		}
 		return next();
@@ -80,5 +101,6 @@ module.exports = {
 	authenticateJWT,
 	ensureLoggedIn,
 	ensureAdmin,
-	ensureCorrectUserOrAdmin
+	ensureCorrectUserOrAdmin,
+	ensureCorrectUserOrAdminEvent
 };

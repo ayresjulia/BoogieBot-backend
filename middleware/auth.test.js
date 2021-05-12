@@ -8,13 +8,14 @@ const {
 	ensureAdmin,
 	ensureCorrectUserOrAdmin
 } = require("./auth");
+// const Event = require("../models/event");
 
 const { SECRET_KEY } = require("../config");
 const testJwt = jwt.sign({ username: "test", isAdmin: false }, SECRET_KEY);
 const badJwt = jwt.sign({ username: "test", isAdmin: false }, "wrong");
 
-describe("authenticateJWT", function () {
-	test("works: via header", function () {
+describe("authenticate jsonwebtoken for user", function () {
+	test("works when passed through header", function () {
 		expect.assertions(2);
 		const req = { headers: { authorization: `Bearer ${testJwt}` } };
 		const res = { locals: {} };
@@ -31,7 +32,7 @@ describe("authenticateJWT", function () {
 		});
 	});
 
-	test("works: no header", function () {
+	test("works when is not passed through header", function () {
 		expect.assertions(2);
 		const req = {};
 		const res = { locals: {} };
@@ -42,7 +43,7 @@ describe("authenticateJWT", function () {
 		expect(res.locals).toEqual({});
 	});
 
-	test("works: invalid token", function () {
+	test("works when invalid token passed", function () {
 		expect.assertions(2);
 		const req = { headers: { authorization: `Bearer ${badJwt}` } };
 		const res = { locals: {} };
@@ -54,8 +55,8 @@ describe("authenticateJWT", function () {
 	});
 });
 
-describe("ensureLoggedIn", function () {
-	test("works", function () {
+describe("ensure Logged In function", function () {
+	test("works for regular user credentials", function () {
 		expect.assertions(1);
 		const req = {};
 		const res = { locals: { user: { username: "test", is_admin: false } } };
@@ -65,7 +66,7 @@ describe("ensureLoggedIn", function () {
 		ensureLoggedIn(req, res, next);
 	});
 
-	test("unauth if no login", function () {
+	test("returns unauthorized for no information passed", function () {
 		expect.assertions(1);
 		const req = {};
 		const res = { locals: {} };
@@ -76,8 +77,8 @@ describe("ensureLoggedIn", function () {
 	});
 });
 
-describe("ensureAdmin", function () {
-	test("works", function () {
+describe("ensure user is admin", function () {
+	test("works when admin is true", function () {
 		expect.assertions(1);
 		const req = {};
 		const res = { locals: { user: { username: "test", isAdmin: true } } };
@@ -87,7 +88,7 @@ describe("ensureAdmin", function () {
 		ensureAdmin(req, res, next);
 	});
 
-	test("unauth if not admin", function () {
+	test("unauthorized if user is not admin", function () {
 		expect.assertions(1);
 		const req = {};
 		const res = { locals: { user: { username: "test", isAdmin: false } } };
@@ -97,7 +98,7 @@ describe("ensureAdmin", function () {
 		ensureAdmin(req, res, next);
 	});
 
-	test("unauth if anon", function () {
+	test("unauthorized if user is not logged in", function () {
 		expect.assertions(1);
 		const req = {};
 		const res = { locals: {} };
@@ -109,7 +110,7 @@ describe("ensureAdmin", function () {
 });
 
 describe("ensureCorrectUserOrAdmin", function () {
-	test("works: admin", function () {
+	test("works if the user is admin", function () {
 		expect.assertions(1);
 		const req = { params: { username: "test" } };
 		const res = { locals: { user: { username: "admin", isAdmin: true } } };
@@ -119,7 +120,7 @@ describe("ensureCorrectUserOrAdmin", function () {
 		ensureCorrectUserOrAdmin(req, res, next);
 	});
 
-	test("works: same user", function () {
+	test("works if user is current user", function () {
 		expect.assertions(1);
 		const req = { params: { username: "test" } };
 		const res = { locals: { user: { username: "test", isAdmin: false } } };
@@ -129,7 +130,7 @@ describe("ensureCorrectUserOrAdmin", function () {
 		ensureCorrectUserOrAdmin(req, res, next);
 	});
 
-	test("unauth: mismatch", function () {
+	test("unauthorized when username doesn't match", function () {
 		expect.assertions(1);
 		const req = { params: { username: "wrong" } };
 		const res = { locals: { user: { username: "test", isAdmin: false } } };
@@ -139,7 +140,7 @@ describe("ensureCorrectUserOrAdmin", function () {
 		ensureCorrectUserOrAdmin(req, res, next);
 	});
 
-	test("unauth: if anon", function () {
+	test("unauthorized when no user is logged in", function () {
 		expect.assertions(1);
 		const req = { params: { username: "test" } };
 		const res = { locals: {} };
