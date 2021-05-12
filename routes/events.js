@@ -5,7 +5,7 @@
 const jsonschema = require("jsonschema");
 const express = require("express");
 const { BadRequestError } = require("../expressError");
-const { ensureCorrectUserOrAdminEvent, ensureAdmin } = require("../middleware/auth");
+const { ensureCorrectUserOrAdminEvent } = require("../middleware/auth");
 const Event = require("../models/event");
 const eventNewSchema = require("../schemas/eventNew.json");
 const eventUpdateSchema = require("../schemas/eventUpdate.json");
@@ -40,7 +40,7 @@ router.post("/new", ensureCorrectUserOrAdminEvent, async function (req, res, nex
  * Authorization required: none
  */
 
-router.get("/", ensureAdmin, async function (req, res, next) {
+router.get("/", async function (req, res, next) {
 	try {
 		const events = await Event.findAll();
 		return res.json({ events });

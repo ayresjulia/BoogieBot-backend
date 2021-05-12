@@ -62,7 +62,6 @@ class Event {
 							host_username AS "hostUsername"
 				 FROM events
 				 ORDER BY id`);
-
 		return result.rows;
 	}
 

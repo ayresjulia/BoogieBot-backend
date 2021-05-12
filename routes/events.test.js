@@ -9,8 +9,10 @@ const {
 	commonAfterAll,
 	testEventIds,
 	u1Token,
-	u2Token,
-	adminToken
+	adminToken,
+	event1,
+	event2,
+	event
 } = require("./_testCommon");
 
 beforeAll(commonBeforeAll);
@@ -24,33 +26,14 @@ describe("post request to create new event", function () {
 	test("creates new event for admin", async function () {
 		const resp = await request(app)
 			.post(`/events/new`)
-			.send({
-				title: "New",
-				description: "New",
-				eventDate: "1993-07-03",
-				eventTime: "11:00 AM",
-				city: "New Orleans",
-				state: "LA",
-				country: "US",
-				imgUrl:
-					"https://images.unsplash.com/photo-1532117182044-031e7cd916ee?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
-				hostUsername: "u1"
-			})
+			.send({ ...event, title: "New" })
 			.set("authorization", `Bearer ${adminToken}`);
 		expect(resp.statusCode).toEqual(201);
 		expect(resp.body).toEqual({
 			event: {
 				id: expect.any(Number),
-				title: "New",
-				description: "New",
-				eventDate: "1993-07-03",
-				eventTime: "11:00 AM",
-				city: "New Orleans",
-				state: "LA",
-				country: "US",
-				imgUrl:
-					"https://images.unsplash.com/photo-1532117182044-031e7cd916ee?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
-				hostUsername: "u1"
+				...event,
+				title: "New"
 			}
 		});
 	});
@@ -58,33 +41,14 @@ describe("post request to create new event", function () {
 	test("creates new event for non-admin", async function () {
 		const resp = await request(app)
 			.post(`/events/new`)
-			.send({
-				title: "RegularUserTest",
-				description: "New",
-				eventDate: "1993-07-03",
-				eventTime: "11:00 AM",
-				city: "New Orleans",
-				state: "LA",
-				country: "US",
-				imgUrl:
-					"https://images.unsplash.com/photo-1532117182044-031e7cd916ee?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
-				hostUsername: "u1"
-			})
+			.send({ ...event, title: "New" })
 			.set("authorization", `Bearer ${u1Token}`);
 		expect(resp.statusCode).toEqual(201);
 		expect(resp.body).toEqual({
 			event: {
 				id: expect.any(Number),
-				title: "RegularUserTest",
-				description: "New",
-				eventDate: "1993-07-03",
-				eventTime: "11:00 AM",
-				city: "New Orleans",
-				state: "LA",
-				country: "US",
-				imgUrl:
-					"https://images.unsplash.com/photo-1532117182044-031e7cd916ee?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
-				hostUsername: "u1"
+				...event,
+				title: "New"
 			}
 		});
 	});
@@ -102,18 +66,7 @@ describe("post request to create new event", function () {
 	test("bad request error with invalid data", async function () {
 		const resp = await request(app)
 			.post(`/events/new`)
-			.send({
-				title: 123,
-				description: "New",
-				eventDate: "1993-07-03",
-				eventTime: "11:00 AM",
-				city: "New Orleans",
-				state: "LA",
-				country: "US",
-				imgUrl:
-					"https://images.unsplash.com/photo-1532117182044-031e7cd916ee?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
-				hostUsername: "u1"
-			})
+			.send({ ...event, title: 123 })
 			.set("authorization", `Bearer ${adminToken}`);
 		expect(resp.statusCode).toEqual(400);
 	});
@@ -125,34 +78,7 @@ describe("get request to get a list of all events", function () {
 	test("admin can get entire list of events", async function () {
 		const resp = await request(app).get(`/events`).set("authorization", `Bearer ${adminToken}`);
 		expect(resp.body).toEqual({
-			events: [
-				{
-					id: expect.any(Number),
-					title: "Event1",
-					description: "EventDesc1",
-					eventDate: "2022-06-08",
-					eventTime: "06:00 PM",
-					city: "New York",
-					state: "NY",
-					country: "US",
-					imgUrl:
-						"https://images.unsplash.com/photo-1532117182044-031e7cd916ee?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
-					hostUsername: "u1"
-				},
-				{
-					id: expect.any(Number),
-					title: "Event2",
-					description: "EventDesc2",
-					eventDate: "2022-06-08",
-					eventTime: "11:00 AM",
-					city: "Austin",
-					state: "TX",
-					country: "US",
-					imgUrl:
-						"https://images.unsplash.com/photo-1532117182044-031e7cd916ee?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
-					hostUsername: "u2"
-				}
-			]
+			events: [ { ...event1, id: expect.any(Number) }, { ...event2, id: expect.any(Number) } ]
 		});
 	});
 });
@@ -167,16 +93,7 @@ describe("get request to get event details by id", function () {
 		expect(resp.body).toEqual({
 			event: {
 				id: testEventIds[0],
-				title: "Event1",
-				description: "EventDesc1",
-				eventDate: "2022-06-08",
-				eventTime: "06:00 PM",
-				city: "New York",
-				state: "NY",
-				country: "US",
-				imgUrl:
-					"https://images.unsplash.com/photo-1532117182044-031e7cd916ee?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
-				hostUsername: "u1",
+				...event1,
 				host: {
 					username: "u1",
 					firstName: "U1F",
@@ -194,16 +111,7 @@ describe("get request to get event details by id", function () {
 		expect(resp.body).toEqual({
 			event: {
 				id: testEventIds[0],
-				title: "Event1",
-				description: "EventDesc1",
-				eventDate: "2022-06-08",
-				eventTime: "06:00 PM",
-				city: "New York",
-				state: "NY",
-				country: "US",
-				imgUrl:
-					"https://images.unsplash.com/photo-1532117182044-031e7cd916ee?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
-				hostUsername: "u1",
+				...event1,
 				host: {
 					username: "u1",
 					firstName: "U1F",
@@ -234,15 +142,7 @@ describe("patch request to update event by id", function () {
 			event: {
 				id: expect.any(Number),
 				title: "E-New",
-				description: "EventDesc1",
-				eventDate: "2022-06-08",
-				eventTime: "06:00 PM",
-				city: "New York",
-				state: "NY",
-				country: "US",
-				imgUrl:
-					"https://images.unsplash.com/photo-1532117182044-031e7cd916ee?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
-				hostUsername: "u1"
+				...patchEvent
 			}
 		});
 	});
@@ -257,15 +157,7 @@ describe("patch request to update event by id", function () {
 			event: {
 				id: expect.any(Number),
 				title: "RegularUserUpdate",
-				description: "EventDesc1",
-				eventDate: "2022-06-08",
-				eventTime: "06:00 PM",
-				city: "New York",
-				state: "NY",
-				country: "US",
-				imgUrl:
-					"https://images.unsplash.com/photo-1532117182044-031e7cd916ee?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
-				hostUsername: "u1"
+				...patchEvent
 			}
 		});
 	});

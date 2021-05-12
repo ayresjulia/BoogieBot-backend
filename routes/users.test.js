@@ -10,9 +10,12 @@ const {
 	commonBeforeEach,
 	commonAfterEach,
 	commonAfterAll,
-	testEventIds,
 	u1Token,
-	adminToken
+	adminToken,
+	user,
+	patchUserData,
+	user1,
+	user2
 } = require("./_testCommon");
 
 beforeAll(commonBeforeAll);
@@ -27,23 +30,17 @@ describe("POST /users", function () {
 		const resp = await request(app)
 			.post("/users")
 			.send({
-				username: "u-new",
-				firstName: "First-new",
-				lastName: "Last-newL",
-				password: "password-new",
+				...user,
 				email: "new@email.com",
-				profileUrl: "",
+				password: "password",
 				isAdmin: false
 			})
 			.set("authorization", `Bearer ${adminToken}`);
 		expect(resp.statusCode).toEqual(201);
 		expect(resp.body).toEqual({
 			user: {
-				username: "u-new",
-				firstName: "First-new",
-				lastName: "Last-newL",
+				...user,
 				email: "new@email.com",
-				profileUrl: "",
 				isAdmin: false
 			},
 			token: expect.any(String)
@@ -54,23 +51,17 @@ describe("POST /users", function () {
 		const resp = await request(app)
 			.post("/users")
 			.send({
-				username: "u-new",
-				firstName: "First-new",
-				lastName: "Last-newL",
-				password: "password-new",
+				...user,
 				email: "new@email.com",
-				profileUrl: "",
+				password: "password",
 				isAdmin: true
 			})
 			.set("authorization", `Bearer ${adminToken}`);
 		expect(resp.statusCode).toEqual(201);
 		expect(resp.body).toEqual({
 			user: {
-				username: "u-new",
-				firstName: "First-new",
-				lastName: "Last-newL",
+				...user,
 				email: "new@email.com",
-				profileUrl: "",
 				isAdmin: true
 			},
 			token: expect.any(String)
@@ -81,12 +72,9 @@ describe("POST /users", function () {
 		const resp = await request(app)
 			.post("/users")
 			.send({
-				username: "u-new",
-				firstName: "First-new",
-				lastName: "Last-newL",
-				password: "password-new",
+				...user,
 				email: "new@email.com",
-				profileUrl: "",
+				password: "password-new",
 				isAdmin: true
 			})
 			.set("authorization", `Bearer ${u1Token}`);
@@ -95,12 +83,9 @@ describe("POST /users", function () {
 
 	test("unauth for anon", async function () {
 		const resp = await request(app).post("/users").send({
-			username: "u-new",
-			firstName: "First-new",
-			lastName: "Last-newL",
-			password: "password-new",
+			...user,
 			email: "new@email.com",
-			profileUrl: "",
+			password: "password-new",
 			isAdmin: true
 		});
 		expect(resp.statusCode).toEqual(401);
@@ -120,12 +105,9 @@ describe("POST /users", function () {
 		const resp = await request(app)
 			.post("/users")
 			.send({
-				username: "u-new",
-				firstName: "First-new",
-				lastName: "Last-newL",
-				password: "password-new",
+				...user,
 				email: "not-an-email",
-				profileUrl: "",
+				password: "password-new",
 				isAdmin: true
 			})
 			.set("authorization", `Bearer ${adminToken}`);
@@ -138,28 +120,7 @@ describe("POST /users", function () {
 describe("GET /users", function () {
 	test("works for admins", async function () {
 		const resp = await request(app).get("/users").set("authorization", `Bearer ${adminToken}`);
-		expect(resp.body).toEqual({
-			users: [
-				{
-					username: "u1",
-					firstName: "U1F",
-					lastName: "U1L",
-					email: "user1@user.com",
-					profileUrl:
-						"https://supersimple.com/wp-content/uploads/peek-a-boo-800-800-200x200.jpg",
-					isAdmin: false
-				},
-				{
-					username: "u2",
-					firstName: "U2F",
-					lastName: "U2L",
-					email: "user2@user.com",
-					profileUrl:
-						"https://supersimple.com/wp-content/uploads/peek-a-boo-800-800-200x200.jpg",
-					isAdmin: false
-				}
-			]
-		});
+		expect(resp.body).toEqual({ users: [ user1, user2 ] });
 	});
 
 	test("unauth for non-admin users", async function () {
@@ -180,32 +141,12 @@ describe("GET /users/:username", function () {
 		const resp = await request(app)
 			.get(`/users/u1`)
 			.set("authorization", `Bearer ${adminToken}`);
-		expect(resp.body).toEqual({
-			user: {
-				username: "u1",
-				firstName: "U1F",
-				lastName: "U1L",
-				email: "user1@user.com",
-				profileUrl:
-					"https://supersimple.com/wp-content/uploads/peek-a-boo-800-800-200x200.jpg",
-				isAdmin: false
-			}
-		});
+		expect(resp.body).toEqual({ user: { ...user1 } });
 	});
 
 	test("works for same user", async function () {
 		const resp = await request(app).get(`/users/u1`).set("authorization", `Bearer ${u1Token}`);
-		expect(resp.body).toEqual({
-			user: {
-				username: "u1",
-				firstName: "U1F",
-				lastName: "U1L",
-				email: "user1@user.com",
-				profileUrl:
-					"https://supersimple.com/wp-content/uploads/peek-a-boo-800-800-200x200.jpg",
-				isAdmin: false
-			}
-		});
+		expect(resp.body).toEqual({ user: { ...user1 } });
 	});
 
 	test("unauth for anon", async function () {
@@ -232,15 +173,7 @@ describe("PATCH /users/:username", () => {
 			})
 			.set("authorization", `Bearer ${adminToken}`);
 		expect(resp.body).toEqual({
-			user: {
-				username: "u1",
-				firstName: "New",
-				lastName: "U1L",
-				email: "user1@user.com",
-				profileUrl:
-					"https://supersimple.com/wp-content/uploads/peek-a-boo-800-800-200x200.jpg",
-				isAdmin: false
-			}
+			user: { ...patchUserData, firstName: "New" }
 		});
 	});
 
@@ -252,15 +185,7 @@ describe("PATCH /users/:username", () => {
 			})
 			.set("authorization", `Bearer ${u1Token}`);
 		expect(resp.body).toEqual({
-			user: {
-				username: "u1",
-				firstName: "New",
-				lastName: "U1L",
-				email: "user1@user.com",
-				profileUrl:
-					"https://supersimple.com/wp-content/uploads/peek-a-boo-800-800-200x200.jpg",
-				isAdmin: false
-			}
+			user: { ...patchUserData, firstName: "New" }
 		});
 	});
 
@@ -308,17 +233,7 @@ describe("PATCH /users/:username", () => {
 				password: "new-password"
 			})
 			.set("authorization", `Bearer ${adminToken}`);
-		expect(resp.body).toEqual({
-			user: {
-				username: "u1",
-				firstName: "U1F",
-				lastName: "U1L",
-				email: "user1@user.com",
-				profileUrl:
-					"https://supersimple.com/wp-content/uploads/peek-a-boo-800-800-200x200.jpg",
-				isAdmin: false
-			}
-		});
+		expect(resp.body).toEqual({ user: { ...user1 } });
 		const isSuccessful = await User.authenticate("u1", "new-password");
 		expect(isSuccessful).toBeTruthy();
 	});

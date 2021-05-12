@@ -8,7 +8,10 @@ const {
 	commonBeforeEach,
 	commonAfterEach,
 	commonAfterAll,
-	testEventIds
+	testEventIds,
+	newEvent,
+	event1,
+	event2
 } = require("./_testCommon");
 
 beforeAll(commonBeforeAll);
@@ -19,19 +22,6 @@ afterAll(commonAfterAll);
 /************************************** create */
 
 describe("create a new event", function () {
-	let newEvent = {
-		title: "Anniversary",
-		description: "Doggies 1st anni",
-		eventDate: "2022-05-08",
-		eventTime: "12:00 PM",
-		city: "Chicago",
-		state: "IL",
-		country: "US",
-		imgUrl:
-			"https://images.unsplash.com/photo-1532117182044-031e7cd916ee?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
-		hostUsername: "u1"
-	};
-
 	test("creates new event successfully", async function () {
 		let event = await Event.create(newEvent);
 		expect(event).toEqual({
@@ -46,33 +36,10 @@ describe("create a new event", function () {
 describe("find all events in the database", function () {
 	test("finds all events in db", async function () {
 		let events = await Event.findAll();
+
 		expect(events).toEqual([
-			{
-				id: testEventIds[0],
-				title: "Event1",
-				description: "EventDesc1",
-				eventDate: "2022-06-07",
-				eventTime: "06:00 PM",
-				city: "New York",
-				state: "NY",
-				country: "US",
-				imgUrl:
-					"https://images.unsplash.com/photo-1532117182044-031e7cd916ee?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
-				hostUsername: "u1"
-			},
-			{
-				id: testEventIds[1],
-				title: "Event2",
-				description: "EventDesc2",
-				eventDate: "2022-06-08",
-				eventTime: "11:00 AM",
-				city: "Austin",
-				state: "TX",
-				country: "US",
-				imgUrl:
-					"https://images.unsplash.com/photo-1532117182044-031e7cd916ee?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
-				hostUsername: "u2"
-			}
+			{ ...event1, id: testEventIds[0] },
+			{ ...event2, id: testEventIds[1] }
 		]);
 	});
 });
@@ -83,16 +50,8 @@ describe("gets event by id", function () {
 	test("works when getting event by id", async function () {
 		let event = await Event.get(testEventIds[0]);
 		expect(event).toEqual({
+			...event1,
 			id: testEventIds[0],
-			title: "Event1",
-			description: "EventDesc1",
-			eventDate: "2022-06-07",
-			eventTime: "06:00 PM",
-			city: "New York",
-			state: "NY",
-			country: "US",
-			imgUrl:
-				"https://images.unsplash.com/photo-1532117182044-031e7cd916ee?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
 			host: {
 				username: "u1",
 				firstName: "U1F",

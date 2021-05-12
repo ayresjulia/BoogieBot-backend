@@ -7,7 +7,10 @@ const {
 	commonBeforeAll,
 	commonBeforeEach,
 	commonAfterEach,
-	commonAfterAll
+	commonAfterAll,
+	newUser,
+	user1,
+	user2
 } = require("./_testCommon");
 
 beforeAll(commonBeforeAll);
@@ -20,14 +23,7 @@ afterAll(commonAfterAll);
 describe("authenticate user", function () {
 	test("works with username and password", async function () {
 		const user = await User.authenticate("u1", "password1");
-		expect(user).toEqual({
-			username: "u1",
-			firstName: "U1F",
-			lastName: "U1L",
-			email: "u1@email.com",
-			profileUrl: "https://supersimple.com/wp-content/uploads/peek-a-boo-800-800-200x200.jpg",
-			isAdmin: false
-		});
+		expect(user).toEqual(user1);
 	});
 
 	test("unauthorized if no such user", async function () {
@@ -52,15 +48,6 @@ describe("authenticate user", function () {
 /************************************** register */
 
 describe("register new user", function () {
-	const newUser = {
-		username: "new",
-		firstName: "Test",
-		lastName: "Tester",
-		email: "test@test.com",
-		profileUrl: "",
-		isAdmin: false
-	};
-
 	test("registers new user", async function () {
 		let user = await User.register({
 			...newUser,
@@ -108,26 +95,7 @@ describe("register new user", function () {
 describe("find all users", function () {
 	test("displays list of all users", async function () {
 		const users = await User.findAll();
-		expect(users).toEqual([
-			{
-				username: "u1",
-				firstName: "U1F",
-				lastName: "U1L",
-				email: "u1@email.com",
-				profileUrl:
-					"https://supersimple.com/wp-content/uploads/peek-a-boo-800-800-200x200.jpg",
-				isAdmin: false
-			},
-			{
-				username: "u2",
-				firstName: "U2F",
-				lastName: "U2L",
-				email: "u2@email.com",
-				profileUrl:
-					"https://supersimple.com/wp-content/uploads/peek-a-boo-800-800-200x200.jpg",
-				isAdmin: false
-			}
-		]);
+		expect(users).toEqual([ user1, user2 ]);
 	});
 });
 
@@ -136,14 +104,7 @@ describe("find all users", function () {
 describe("get user by username", function () {
 	test("gets user by username", async function () {
 		let user = await User.get("u1");
-		expect(user).toEqual({
-			username: "u1",
-			firstName: "U1F",
-			lastName: "U1L",
-			email: "u1@email.com",
-			profileUrl: "https://supersimple.com/wp-content/uploads/peek-a-boo-800-800-200x200.jpg",
-			isAdmin: false
-		});
+		expect(user).toEqual(user1);
 	});
 
 	test("not found if username doesn't exist", async function () {
