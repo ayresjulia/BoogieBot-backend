@@ -104,4 +104,20 @@ router.delete("/:id", ensureCorrectUserOrAdminEvent, async function (req, res, n
 	}
 });
 
+/** POST /events/moodboard 
+ *
+ * Returns {"saved": body}
+ *
+ * Authorization required: admin or same-user-as-:username
+ * */
+
+router.post("/moodboard/new", async function (req, res, next) {
+	try {
+		await Event.saveToMoodboard(req.body);
+		return res.json({ saved: req.body });
+	} catch (err) {
+		return next(err);
+	}
+});
+
 module.exports = router;

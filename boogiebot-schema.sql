@@ -23,9 +23,9 @@ CREATE TABLE events (
     REFERENCES users ON DELETE CASCADE
 );
 
--- CREATE TABLE moodboard (
---   event_id INTEGER
---     REFERENCES events ON DELETE CASCADE,
---   inspiration TEXT NOT NULL,
---   catering TEXT NOT NULL
--- );
+CREATE TABLE moodboard (
+  event_id INTEGER
+    REFERENCES events ON DELETE CASCADE,
+  inspiration_url TEXT,
+  restaurant_key TEXT
+);

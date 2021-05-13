@@ -50,18 +50,20 @@ class Event {
    **/
 
 	static async findAll () {
-		const result = await db.query(`SELECT id,
-							title,
-							description,
-							event_date AS "eventDate", 
-							event_time AS "eventTime", 
-							city, 
-							state, 
-							country,
-							img_url AS "imgUrl",
-							host_username AS "hostUsername"
-				 FROM events
-				 ORDER BY id`);
+		let result = await db.query(
+			`SELECT id,
+					title,
+					description,
+					event_date AS "eventDate", 
+					event_time AS "eventTime", 
+					city, 
+					state, 
+					country,
+					img_url AS "imgUrl",
+					host_username AS "hostUsername"
+				 FROM events`
+		);
+
 		return result.rows;
 	}
 
@@ -104,7 +106,17 @@ class Event {
 			[ event.hostUsername ]
 		);
 
+		const moodboardRes = await db.query(
+			`SELECT event_id AS "eventId",
+					inspiration_url AS "inspirationUrl",
+					restaurant_key AS "restaurantKey"
+			FROM moodboard
+			WHERE event_id = $1`,
+			[ event.id ]
+		);
+
 		event.host = hostRes.rows[0];
+		event.moodboard = moodboardRes.rows;
 
 		return event;
 	}
@@ -161,6 +173,30 @@ class Event {
 		const event = result.rows[0];
 
 		if (!event) throw new NotFoundError(`No event found with ID: ${id}`);
+	}
+
+	/** Save to moodboard: update db, returns undefined.
+   *
+   * - eventId: event connected to moodboard
+   * - item: 
+   **/
+
+	static async saveToMoodboard (data) {
+		const preCheck = await db.query(
+			`SELECT id
+	       FROM events
+	       WHERE id = $1`,
+			[ data.event_id ]
+		);
+		const event = preCheck.rows[0];
+
+		if (!event) throw new NotFoundError(`No event with ID: ${data.event_id}`);
+
+		await db.query(
+			`INSERT INTO moodboard (event_id, inspiration_url, restaurant_key)
+	       VALUES ($1, $2, $3)`,
+			[ data.event_id, data.inspiration_url, data.restaurant_key ]
+		);
 	}
 }
 
