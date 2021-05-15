@@ -75,7 +75,7 @@ router.get("/:id", ensureCorrectUserOrAdminEvent, async function (req, res, next
  * Authorization required: correct user or admin
  */
 
-router.patch("/:id", ensureCorrectUserOrAdminEvent, async function (req, res, next) {
+router.patch("/:id/edit", ensureCorrectUserOrAdminEvent, async function (req, res, next) {
 	try {
 		const validator = jsonschema.validate(req.body, eventUpdateSchema);
 		if (!validator.valid) {
@@ -84,6 +84,7 @@ router.patch("/:id", ensureCorrectUserOrAdminEvent, async function (req, res, ne
 		}
 
 		const event = await Event.update(req.params.id, req.body);
+
 		return res.json({ event });
 	} catch (err) {
 		return next(err);
@@ -111,7 +112,7 @@ router.delete("/:id", ensureCorrectUserOrAdminEvent, async function (req, res, n
  * Authorization required: admin or same-user-as-:username
  * */
 
-router.post("/moodboard/new", async function (req, res, next) {
+router.post("/moodboard/new", ensureCorrectUserOrAdminEvent, async function (req, res, next) {
 	try {
 		await Event.saveToMoodboard(req.body);
 		return res.json({ saved: req.body });
@@ -119,5 +120,21 @@ router.post("/moodboard/new", async function (req, res, next) {
 		return next(err);
 	}
 });
+
+// /** DELETE /events/moodboard
+//  *
+//  * Returns {"saved": body}
+//  *
+//  * Authorization required: admin or same-user-as-:username
+//  * */
+
+// router.post("/moodboard/delete", ensureCorrectUserOrAdminEvent, async function (req, res, next) {
+// 	try {
+// 		await Event.delete(req.params.id);
+// 		return res.json({ deleted: req.body });
+// 	} catch (err) {
+// 		return next(err);
+// 	}
+// });
 
 module.exports = router;

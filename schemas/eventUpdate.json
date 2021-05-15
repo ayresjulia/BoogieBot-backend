@@ -1,6 +1,6 @@
 {
 	"$schema": "http://json-schema.org/draft-07/schema#",
-	"$id": "http://our.company.com/jobUpdate.schema.json",
+	"$id": "http://our.company.com/eventUpdate.schema.json",
 	"type": "object",
 	"properties": {
 		"title": {
@@ -13,13 +13,11 @@
 			"minLength": 1,
 			"maxLength": 200
 		},
-		"eventDate": {
-			"type": "string",
-			"format": "date"
+		"event_date": {
+			"type": "string"
 		},
-		"eventTime": {
-			"type": "string",
-			"pattern": "0|(0?\\.[0-9]+)"
+		"event_time": {
+			"type": "string"
 		},
 		"city": {
 			"type": "string",
@@ -36,7 +34,7 @@
 			"minLength": 1,
 			"maxLength": 50
 		},
-		"imgUrl": {
+		"img_url": {
 			"type": "string"
 		}
 	},

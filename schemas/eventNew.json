@@ -14,8 +14,7 @@
 			"maxLength": 200
 		},
 		"eventDate": {
-			"type": "string",
-			"format": "date"
+			"type": "string"
 		},
 		"eventTime": {
 			"type": "string"
@@ -27,13 +26,11 @@
 		},
 		"state": {
 			"type": "string",
-			"minLength": 1,
-			"maxLength": 50
+			"minLength": 0
 		},
 		"country": {
 			"type": "string",
-			"minLength": 1,
-			"maxLength": 50
+			"minLength": 0
 		},
 		"imgUrl": {
 			"type": "string"
@@ -43,5 +40,14 @@
 		}
 	},
 	"additionalProperties": false,
-	"required": [ "title", "description", "eventDate", "eventTime", "city", "state", "country" ]
+	"required": [
+		"title",
+		"description",
+		"eventDate",
+		"eventTime",
+		"city",
+		"state",
+		"country",
+		"hostUsername"
+	]
 }

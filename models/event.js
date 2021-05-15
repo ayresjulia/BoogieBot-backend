@@ -109,7 +109,8 @@ class Event {
 		const moodboardRes = await db.query(
 			`SELECT event_id AS "eventId",
 					inspiration_url AS "inspirationUrl",
-					restaurant_key AS "restaurantKey"
+					restaurant_name AS "restaurantName",
+					restaurant_address AS "restaurantAddress"
 			FROM moodboard
 			WHERE event_id = $1`,
 			[ event.id ]
@@ -142,16 +143,16 @@ class Event {
                       RETURNING id, 
                                 title,
                                 description,
-                                event_date AS "eventDate", 
-                          		event_time AS "eventTime",  
+                                event_date, 
+                          		event_time,  
                                 city, 
                                 state, 
 								country,
-								img_url AS "imgUrl",
+								img_url,
 								host_username AS "hostUsername"`;
 		const result = await db.query(querySql, [ ...values, id ]);
 		const event = result.rows[0];
-
+		console.log("event", event);
 		if (!event) throw new NotFoundError(`No event found with ID: ${id}`);
 
 		return event;
@@ -193,11 +194,26 @@ class Event {
 		if (!event) throw new NotFoundError(`No event with ID: ${data.event_id}`);
 
 		await db.query(
-			`INSERT INTO moodboard (event_id, inspiration_url, restaurant_key)
-	       VALUES ($1, $2, $3)`,
-			[ data.event_id, data.inspiration_url, data.restaurant_key ]
+			`INSERT INTO moodboard (event_id, inspiration_url, restaurant_name, restaurant_address)
+	       VALUES ($1, $2, $3, $4)`,
+			[ data.event_id, data.inspiration_url, data.restaurant_name, data.restaurant_address ]
 		);
 	}
+
+	/** Delete from the moodboard */
+
+	// static async delete (event_id) {
+	// 	const result = await db.query(
+	// 		`DELETE
+	// 		FROM moodboard
+	// 		WHERE id = $1
+	// 		RETURNING id`,
+	// 		[ event_id ]
+	// 	);
+	// 	const moodboard = result.rows[0];
+
+	// 	if (!moodboard) throw new NotFoundError(`No event found with ID: ${event_id}`);
+	// }
 }
 
 module.exports = Event;
