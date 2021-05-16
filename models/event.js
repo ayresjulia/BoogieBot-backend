@@ -199,21 +199,6 @@ class Event {
 			[ data.event_id, data.inspiration_url, data.restaurant_name, data.restaurant_address ]
 		);
 	}
-
-	/** Delete from the moodboard */
-
-	// static async delete (event_id) {
-	// 	const result = await db.query(
-	// 		`DELETE
-	// 		FROM moodboard
-	// 		WHERE id = $1
-	// 		RETURNING id`,
-	// 		[ event_id ]
-	// 	);
-	// 	const moodboard = result.rows[0];
-
-	// 	if (!moodboard) throw new NotFoundError(`No event found with ID: ${event_id}`);
-	// }
 }
 
 module.exports = Event;

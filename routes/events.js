@@ -121,20 +121,4 @@ router.post("/moodboard/new", ensureCorrectUserOrAdminEvent, async function (req
 	}
 });
 
-// /** DELETE /events/moodboard
-//  *
-//  * Returns {"saved": body}
-//  *
-//  * Authorization required: admin or same-user-as-:username
-//  * */
-
-// router.post("/moodboard/delete", ensureCorrectUserOrAdminEvent, async function (req, res, next) {
-// 	try {
-// 		await Event.delete(req.params.id);
-// 		return res.json({ deleted: req.body });
-// 	} catch (err) {
-// 		return next(err);
-// 	}
-// });
-
 module.exports = router;
