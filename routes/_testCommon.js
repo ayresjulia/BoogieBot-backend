@@ -52,6 +52,18 @@ const event = {
 	hostUsername: "u1"
 };
 
+const patchEvent = {
+	description: "EventDesc1",
+	event_date: "2022-06-08",
+	event_time: "06:00 PM",
+	city: "New York",
+	state: "NY",
+	country: "US",
+	img_url:
+		"https://images.unsplash.com/photo-1532117182044-031e7cd916ee?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+	hostUsername: "u1"
+};
+
 const event1 = {
 	title: "Event1",
 	description: "EventDesc1",
@@ -120,5 +132,6 @@ module.exports = {
 	user,
 	user1,
 	user2,
-	patchUserData
+	patchUserData,
+	patchEvent
 };

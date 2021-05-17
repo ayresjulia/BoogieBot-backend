@@ -9,7 +9,7 @@ const {
 	commonBeforeEach,
 	commonAfterEach,
 	commonAfterAll,
-	newUser
+	user
 } = require("./_testCommon");
 
 beforeAll(commonBeforeAll);
@@ -68,7 +68,7 @@ describe("post request to register new user", function () {
 	test("works for any user: regular or admin", async function () {
 		const resp = await request(app)
 			.post("/auth/register")
-			.send({ ...newUser, password: "password" });
+			.send({ ...user, password: "password", email: "email@me.com" });
 		expect(resp.statusCode).toEqual(201);
 		expect(resp.body).toEqual({
 			token: expect.any(String)

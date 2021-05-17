@@ -40,7 +40,6 @@ class Event {
 			]
 		);
 		let event = result.rows[0];
-
 		return event;
 	}
 
@@ -152,7 +151,6 @@ class Event {
 								host_username AS "hostUsername"`;
 		const result = await db.query(querySql, [ ...values, id ]);
 		const event = result.rows[0];
-		console.log("event", event);
 		if (!event) throw new NotFoundError(`No event found with ID: ${id}`);
 
 		return event;

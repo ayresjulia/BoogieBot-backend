@@ -87,7 +87,6 @@ async function ensureCorrectUserOrAdminEvent (req, res, next) {
 		if (user === undefined) throw new UnauthorizedError();
 		const events = await Event.findAll();
 		const correctUser = events.find((e) => Object.values(e).includes(user.username));
-
 		if (!(user && (user.isAdmin || correctUser.hostUsername === user.username))) {
 			throw new UnauthorizedError();
 		}

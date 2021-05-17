@@ -57,7 +57,8 @@ describe("gets event by id", function () {
 				firstName: "U1F",
 				lastName: "U1L",
 				email: "u1@email.com"
-			}
+			},
+			moodboard: []
 		});
 	});
 
@@ -82,12 +83,12 @@ describe("update event partially", function () {
 		let event = await Event.update(testEventIds[0], updateData);
 		expect(event).toEqual({
 			id: testEventIds[0],
-			eventDate: "2022-06-07",
-			eventTime: "06:00 PM",
+			event_date: "2022-06-07",
+			event_time: "06:00 PM",
 			city: "New York",
 			state: "NY",
 			country: "US",
-			imgUrl:
+			img_url:
 				"https://images.unsplash.com/photo-1532117182044-031e7cd916ee?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
 			hostUsername: "u1",
 			...updateData

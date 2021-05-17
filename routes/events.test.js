@@ -12,7 +12,8 @@ const {
 	adminToken,
 	event1,
 	event2,
-	event
+	event,
+	patchEvent
 } = require("./_testCommon");
 
 beforeAll(commonBeforeAll);
@@ -99,7 +100,8 @@ describe("get request to get event details by id", function () {
 					firstName: "U1F",
 					lastName: "U1L",
 					email: "user1@user.com"
-				}
+				},
+				moodboard: []
 			}
 		});
 	});
@@ -117,7 +119,8 @@ describe("get request to get event details by id", function () {
 					firstName: "U1F",
 					lastName: "U1L",
 					email: "user1@user.com"
-				}
+				},
+				moodboard: []
 			}
 		});
 	});
@@ -128,12 +131,12 @@ describe("get request to get event details by id", function () {
 	});
 });
 
-/************************************** PATCH /events/:id */
+/************************************** PATCH /events/:id/edit */
 
 describe("patch request to update event by id", function () {
 	test("admin can update event by id", async function () {
 		const resp = await request(app)
-			.patch(`/events/${testEventIds[0]}`)
+			.patch(`/events/${testEventIds[0]}/edit`)
 			.send({
 				title: "E-New"
 			})
@@ -148,7 +151,7 @@ describe("patch request to update event by id", function () {
 	});
 	test("user host can update event by id", async function () {
 		const resp = await request(app)
-			.patch(`/events/${testEventIds[0]}`)
+			.patch(`/events/${testEventIds[0]}/edit`)
 			.send({
 				title: "RegularUserUpdate"
 			})
@@ -163,7 +166,7 @@ describe("patch request to update event by id", function () {
 	});
 
 	test("unauthorized for non-users or non-hosts", async function () {
-		const resp = await request(app).patch(`/events/${testEventIds[1]}`).send({
+		const resp = await request(app).patch(`/events/${testEventIds[1]}/edit`).send({
 			title: "E-New"
 		});
 		expect(resp.statusCode).toEqual(401);
@@ -171,7 +174,7 @@ describe("patch request to update event by id", function () {
 
 	test("not found error if event id doesn't exist", async function () {
 		const resp = await request(app)
-			.patch(`/events/0`)
+			.patch(`/events/0/edit`)
 			.send({
 				id: "nope"
 			})
@@ -181,7 +184,7 @@ describe("patch request to update event by id", function () {
 
 	test("bad request error if trying to change id of the event", async function () {
 		const resp = await request(app)
-			.patch(`/events/${testEventIds[0]}`)
+			.patch(`/events/${testEventIds[0]}/edit`)
 			.send({
 				id: 56
 			})
@@ -191,7 +194,7 @@ describe("patch request to update event by id", function () {
 
 	test("bad request error with invalid data", async function () {
 		const resp = await request(app)
-			.patch(`/events/${testEventIds[0]}`)
+			.patch(`/events/${testEventIds[0]}/edit`)
 			.send({
 				title: 123
 			})
@@ -200,31 +203,31 @@ describe("patch request to update event by id", function () {
 	});
 });
 
-/************************************** DELETE /events/:id */
+/************************************** DELETE /events/:id/delete */
 
 describe("delete request to remove event by id", function () {
 	test("admin can delete event by id", async function () {
 		const resp = await request(app)
-			.delete(`/events/${testEventIds[0]}`)
+			.delete(`/events/${testEventIds[0]}/delete`)
 			.set("authorization", `Bearer ${adminToken}`);
 		expect(resp.body).toEqual({ deleted: testEventIds[0] });
 	});
 
 	test("user host can delete their event by id", async function () {
 		const resp = await request(app)
-			.delete(`/events/${testEventIds[0]}`)
+			.delete(`/events/${testEventIds[0]}/delete`)
 			.set("authorization", `Bearer ${u1Token}`);
 		expect(resp.body).toEqual({ deleted: testEventIds[0] });
 	});
 
 	test("unauthorized for non-users and non-hosts", async function () {
-		const resp = await request(app).delete(`/events/${testEventIds[0]}`);
+		const resp = await request(app).delete(`/events/${testEventIds[0]}/delete`);
 		expect(resp.statusCode).toEqual(401);
 	});
 
 	test("not found error if event id doesn't exist", async function () {
 		const resp = await request(app)
-			.delete(`/events/0`)
+			.delete(`/events/0/delete`)
 			.set("authorization", `Bearer ${adminToken}`);
 		expect(resp.statusCode).toEqual(404);
 	});

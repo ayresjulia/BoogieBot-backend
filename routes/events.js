@@ -20,8 +20,9 @@ const router = express.Router({ mergeParams: true });
  * Authorization required: correct user or admin
  */
 
-router.post("/new", ensureCorrectUserOrAdminEvent, async function (req, res, next) {
+router.post("/new", async function (req, res, next) {
 	try {
+		console.log("REQ.BODY", req.body);
 		const validator = jsonschema.validate(req.body, eventNewSchema);
 		if (!validator.valid) {
 			const errs = validator.errors.map((e) => e.stack);
@@ -58,6 +59,7 @@ router.get("/", async function (req, res, next) {
  */
 
 router.get("/:id", ensureCorrectUserOrAdminEvent, async function (req, res, next) {
+	console.log("req.params", req.params);
 	try {
 		const event = await Event.get(req.params.id);
 		return res.json({ event });
@@ -66,7 +68,7 @@ router.get("/:id", ensureCorrectUserOrAdminEvent, async function (req, res, next
 	}
 });
 
-/** PATCH /events/id
+/** PATCH /events/id/edit
  *
  * Data can include: { title, description, event_date, event_time, city, state, country, img_url }
  *
@@ -91,12 +93,12 @@ router.patch("/:id/edit", ensureCorrectUserOrAdminEvent, async function (req, re
 	}
 });
 
-/** DELETE /events/id  =>  { deleted: id }
+/** DELETE /events/id/delete  =>  { deleted: id }
  *
  * Authorization required: correct user or admin
  */
 
-router.delete("/:id", ensureCorrectUserOrAdminEvent, async function (req, res, next) {
+router.delete("/:id/delete", ensureCorrectUserOrAdminEvent, async function (req, res, next) {
 	try {
 		await Event.remove(req.params.id);
 		return res.json({ deleted: +req.params.id });
