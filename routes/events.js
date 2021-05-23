@@ -22,7 +22,6 @@ const router = express.Router({ mergeParams: true });
 
 router.post("/new", async function (req, res, next) {
 	try {
-		console.log("REQ.BODY", req.body);
 		const validator = jsonschema.validate(req.body, eventNewSchema);
 		if (!validator.valid) {
 			const errs = validator.errors.map((e) => e.stack);
@@ -59,7 +58,6 @@ router.get("/", async function (req, res, next) {
  */
 
 router.get("/:id", ensureCorrectUserOrAdminEvent, async function (req, res, next) {
-	console.log("req.params", req.params);
 	try {
 		const event = await Event.get(req.params.id);
 		return res.json({ event });
