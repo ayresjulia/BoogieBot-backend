@@ -13,10 +13,10 @@
 			"minLength": 1,
 			"maxLength": 200
 		},
-		"event_date": {
+		"eventDate": {
 			"type": "string"
 		},
-		"event_time": {
+		"eventTime": {
 			"type": "string"
 		},
 		"city": {
@@ -34,7 +34,7 @@
 			"minLength": 1,
 			"maxLength": 50
 		},
-		"img_url": {
+		"imgUrl": {
 			"type": "string"
 		}
 	},

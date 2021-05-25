@@ -133,7 +133,11 @@ class Event {
    */
 
 	static async update (id, data) {
-		const { setCols, values } = sqlForPartialUpdate(data, {});
+		const { setCols, values } = sqlForPartialUpdate(data, {
+			eventDate: "event_date",
+			eventTime: "event_time",
+			imgUrl: "img_url"
+		});
 		const idVarIdx = "$" + (values.length + 1);
 
 		const querySql = `UPDATE events 
@@ -142,12 +146,12 @@ class Event {
                       RETURNING id, 
                                 title,
                                 description,
-                                event_date, 
-                          		event_time,  
+                                event_date AS "eventDate", 
+                          		event_time AS "eventTime",  
                                 city, 
                                 state, 
 								country,
-								img_url,
+								img_url AS "imgUrl",
 								host_username AS "hostUsername"`;
 		const result = await db.query(querySql, [ ...values, id ]);
 		const event = result.rows[0];
